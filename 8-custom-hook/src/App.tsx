@@ -1,5 +1,6 @@
 import "./App.css";
 import { MovieApp } from "./components/MovieApp";
+import { MovieAppHook } from "./components/MovieAppHook";
 
 function App() {
   // https://omdbapi.com/?apikey=416ed51a&s=star
@@ -7,7 +8,8 @@ function App() {
   return (
     <>
       <section id="center">
-        <MovieApp />
+        {/* <MovieApp /> */}
+        <MovieAppHook />
       </section>
 
       <div className="ticks"></div>

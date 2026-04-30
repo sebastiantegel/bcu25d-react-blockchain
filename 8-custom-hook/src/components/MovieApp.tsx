@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { OmdbResponse } from "../models/OmdbResponse";
 import type { Movie } from "../models/Movie";
+import { getMovieById, getMovies } from "../services/movieService";
 
 export const MovieApp = () => {
   const [movies, setMovies] = useState<Movie[]>(
@@ -12,13 +12,8 @@ export const MovieApp = () => {
     console.log("Effect is running");
 
     const getData = async () => {
-      const response = await fetch(
-        "https://omdbapi.com/?apikey=416ed51a&s=star",
-      );
-
-      const data: OmdbResponse = await response.json();
-      console.log(data.Search);
-      setMovies(data.Search);
+      const movies = await getMovies("star");
+      setMovies(movies);
     };
 
     if (movies.length === 0) {
@@ -27,15 +22,15 @@ export const MovieApp = () => {
   }, []);
 
   const handleSearch = async (search: string) => {
-    const response = await fetch(
-      `https://omdbapi.com/?apikey=416ed51a&s=${search}`,
-    );
-
-    const data: OmdbResponse = await response.json();
-    console.log(data.Search);
-    setMovies(data.Search);
-    localStorage.setItem("movies", JSON.stringify(data.Search));
+    const movies = await getMovies(search);
+    setMovies(movies);
+    localStorage.setItem("movies", JSON.stringify(movies));
     setSearchText("");
+  };
+
+  const handleSingleMovie = async (id: string) => {
+    const movie = await getMovieById(id);
+    console.log(movie);
   };
 
   return (
@@ -56,7 +51,11 @@ export const MovieApp = () => {
 
       <div className="movies">
         {movies.map((m) => (
-          <div key={m.imdbID} className="movie">
+          <div
+            key={m.imdbID}
+            className="movie"
+            onClick={() => handleSingleMovie(m.imdbID)}
+          >
             <h3>{m.Title}</h3>
             <div>
               <img src={m.Poster} alt={m.Title} />
