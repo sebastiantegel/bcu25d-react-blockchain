@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 import type { AddPerson } from "../models/AddPerson";
 import type { ethers } from "ethers";
 
@@ -13,25 +13,25 @@ export const AddPersonForm = ({ writeContract }: AddPersonFormProps) => {
     isMarried: false,
   });
 
+  const handleSubmit = async (e: SubmitEvent) => {
+    e.preventDefault();
+
+    const receipt = await writeContract.createPerson(
+      person.name,
+      person.age,
+      person.isMarried,
+    );
+    await receipt.wait();
+
+    setPerson({
+      name: "",
+      age: 0,
+      isMarried: false,
+    });
+  };
+
   return (
-    <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-
-        const receipt = await writeContract.createPerson(
-          person.name,
-          person.age,
-          person.isMarried,
-        );
-        await receipt.wait();
-
-        setPerson({
-          name: "",
-          age: 0,
-          isMarried: false,
-        });
-      }}
-    >
+    <form onSubmit={handleSubmit}>
       <div>
         <label htmlFor="name">Namn:</label>
         <input
