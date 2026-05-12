@@ -1,0 +1,49 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-c101f059234cd5a3f9bd0c5d66375ad32945be71",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "compilerType": "solc",
+  "toolVersions": {
+    "hardhat": "3.4.5"
+  },
+  "userSourceNameMap": {
+    "contracts/Persons.sol": "project/contracts/Persons.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode.linkReferences",
+            "evm.bytecode.object",
+            "evm.bytecode.opcodes",
+            "evm.bytecode.sourceMap",
+            "evm.deployedBytecode.immutableReferences",
+            "evm.deployedBytecode.linkReferences",
+            "evm.deployedBytecode.object",
+            "evm.deployedBytecode.opcodes",
+            "evm.deployedBytecode.sourceMap",
+            "evm.methodIdentifiers"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/Persons.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity >=0.4.22 <0.9.0;\r\n\r\ncontract PersonsContract {\r\n    uint nextId = 0;\r\n    uint public numberOfPersons = 0;\r\n\r\n    struct Persons {\r\n        uint id;\r\n        string name;\r\n        uint age;\r\n        bool isMarried;\r\n    }\r\n\r\n    event PersonCreated(uint id);\r\n    event PersonDeleted(uint id);\r\n    event PersonsIndex(uint[] ids);\r\n\r\n    mapping(uint => Persons) public persons;\r\n    uint[] public personList;\r\n\r\n    function createPerson(\r\n        string memory _name,\r\n        uint _age,\r\n        bool _isMarried\r\n    ) public {\r\n        nextId++;\r\n        numberOfPersons++;\r\n        persons[nextId] = Persons(nextId, _name, _age, _isMarried);\r\n        personList.push(nextId);\r\n        emit PersonCreated(nextId);\r\n    }\r\n\r\n    function removePerson(uint id) public {\r\n        numberOfPersons--;\r\n        delete persons[id];\r\n\r\n        for (uint i = 0; i < personList.length; i++) {\r\n            if (personList[i] == id) {\r\n                personList[i] = personList[personList.length - 1];\r\n                personList.pop();\r\n                break;\r\n            }\r\n        }\r\n\r\n        emit PersonDeleted(id);\r\n    }\r\n\r\n    function getIndexList() public view returns (uint[] memory) {\r\n        return personList;\r\n    }\r\n\r\n    constructor() {\r\n        createPerson(\"Sebastian\", 46, true);\r\n        createPerson(\"Hanna\", 46, true);\r\n    }\r\n}\r\n"
+      }
+    }
+  }
+}
